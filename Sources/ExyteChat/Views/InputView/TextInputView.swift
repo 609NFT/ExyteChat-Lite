@@ -31,8 +31,7 @@ struct TextInputView: View {
     }
     
     private func isMediaGiphyAvailable() -> Bool {
-        return availableInputs.contains(AvailableInputType.media)
-        || availableInputs.contains(AvailableInputType.giphy)
+        return false
     }
 }
 

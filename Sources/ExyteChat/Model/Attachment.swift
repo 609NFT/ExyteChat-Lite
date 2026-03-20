@@ -3,7 +3,6 @@
 //
 
 import Foundation
-import ExyteMediaPicker
 
 public enum AttachmentType: String, Codable, Sendable {
     case image
@@ -17,25 +16,16 @@ public enum AttachmentType: String, Codable, Sendable {
             return "Video"
         }
     }
-
-    public init(mediaType: MediaType) {
-        switch mediaType {
-        case .image:
-            self = .image
-        default:
-            self = .video
-        }
-    }
 }
 
 public struct Attachment: Codable, Identifiable, Hashable, Sendable {
-    
+
     public enum UploadStatus: Sendable, Codable, Hashable {
         case inProgress(Int?) // value = percent upto 99%, nil no percent shown, progress indicator only
         case complete
         case cancelled
         case error
-        
+
         public static func == (lhs: UploadStatus, rhs: UploadStatus) -> Bool {
             switch (lhs, rhs) {
             case (.error, .error):
@@ -51,8 +41,8 @@ public struct Attachment: Codable, Identifiable, Hashable, Sendable {
             }
         }
     }
-    
-    
+
+
     public let id: String
     public let thumbnail: URL
     public let full: URL
@@ -75,7 +65,7 @@ public struct Attachment: Codable, Identifiable, Hashable, Sendable {
     public init(id: String, url: URL, type: AttachmentType, cacheKey: String? = nil) {
         self.init(id: id, thumbnail: url, full: url, type: type, thumbnailCacheKey: cacheKey, fullCacheKey: cacheKey)
     }
-    
+
     public func copy(
         id: String? = nil,
         thumbnail: URL? = nil,

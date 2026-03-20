@@ -13,7 +13,9 @@ struct AttachmentUploadStatusCapsuleView: View {
             if let percent {
                 Text("\(percent)%")
             }
-            ActivityIndicator(size: 14, showBackground: false, color: .white)
+            ProgressView()
+                .tint(.white)
+                .scaleEffect(0.7)
         }
         .font(.caption)
         .foregroundColor(.white)

@@ -4,7 +4,6 @@
 
 import Foundation
 import Combine
-import ExyteMediaPicker
 
 @MainActor
 final class InputViewModel: ObservableObject {
@@ -12,13 +11,6 @@ final class InputViewModel: ObservableObject {
     @Published var text = ""
     @Published var attachments = InputViewAttachments()
     @Published var state: InputViewState = .empty
-
-    @Published var showGiphyPicker = false
-    @Published var showPicker = false
-  
-    @Published var mediaPickerMode = MediaPickerMode.photos
-
-    @Published var showActivityIndicator = false
 
     var recordingPlayer: RecordingPlayer?
     var didSendMessage: ((DraftMessage) -> Void)?
@@ -29,7 +21,7 @@ final class InputViewModel: ObservableObject {
 
     private var recordPlayerSubscription: AnyCancellable?
     private var subscriptions = Set<AnyCancellable>()
-    
+
     func setRecorderSettings(recorderSettings: RecorderSettings = RecorderSettings()) {
         Task {
             await self.recorder.setRecorderSettings(recorderSettings)
@@ -38,8 +30,6 @@ final class InputViewModel: ObservableObject {
 
     func onStart() {
         subscribeValidation()
-        subscribePicker()
-        subscribeGiphyPicker()
     }
 
     func onStop() {
@@ -48,8 +38,6 @@ final class InputViewModel: ObservableObject {
 
     func reset() {
         DispatchQueue.main.async { [weak self] in
-            self?.showPicker = false
-            self?.showGiphyPicker = false
             self?.text = ""
             self?.saveEditingClosure = nil
             self?.attachments = InputViewAttachments()
@@ -76,19 +64,9 @@ final class InputViewModel: ObservableObject {
             self?.inputViewActionInternal($0)
         }
     }
-    
+
     private func inputViewActionInternal(_ action: InputViewAction) {
         switch action {
-        case .giphy:
-            showGiphyPicker = true
-        case .photo:
-            mediaPickerMode = .photos
-            showPicker = true
-        case .add:
-            mediaPickerMode = .camera
-        case .camera:
-            mediaPickerMode = .camera
-            showPicker = true
         case .send:
             send()
         case .recordAudioTap:
@@ -164,10 +142,9 @@ private extension InputViewModel {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             guard state != .editing else { return } // special case
-            if !self.text.isEmpty || !self.attachments.medias.isEmpty {
+            if !self.text.isEmpty {
                 self.state = .hasTextOrMedia
             } else if self.text.isEmpty,
-                      self.attachments.medias.isEmpty,
                       self.attachments.recording == nil {
                 self.state = .empty
             }
@@ -184,26 +161,6 @@ private extension InputViewModel {
             self?.validateDraft()
         }
         .store(in: &subscriptions)
-    }
-
-    func subscribeGiphyPicker() {
-        $showGiphyPicker
-            .sink { [weak self] value in
-                if !value {
-                  self?.attachments.giphyMedia = nil
-                }
-            }
-            .store(in: &subscriptions)
-    }
-  
-    func subscribePicker() {
-        $showPicker
-            .sink { [weak self] value in
-                if !value {
-                    self?.attachments.medias = []
-                }
-            }
-            .store(in: &subscriptions)
     }
 
     func subscribeRecordPlayer() {
@@ -225,18 +182,14 @@ private extension InputViewModel {
 private extension InputViewModel {
 
     func sendMessage() {
-        showActivityIndicator = true
         let draft = DraftMessage(
             text: self.text,
-            medias: attachments.medias,
-            giphyMedia: attachments.giphyMedia,
             recording: attachments.recording,
             replyMessage: attachments.replyMessage,
             createdAt: Date()
         )
         didSendMessage?(draft)
         DispatchQueue.main.async { [weak self] in
-            self?.showActivityIndicator = false
             self?.reset()
         }
     }

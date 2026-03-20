@@ -37,15 +37,12 @@ struct ChatNavigationModifier: ViewModifier {
         ToolbarItem(placement: .principal) {
             HStack {
                 if let url = cover {
-                    CachedAsyncImage(url: url) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFill()
-                        default:
-                            Rectangle().fill(theme.colors.mainTint)
-                        }
+                    CachedAsyncImage(url: url) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    } placeholder: {
+                        Rectangle().fill(theme.colors.mainTint)
                     }
                     .frame(width: 35, height: 35)
                     .clipShape(Circle())

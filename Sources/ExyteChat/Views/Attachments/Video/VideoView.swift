@@ -17,7 +17,7 @@ struct VideoView: View {
             if let player = viewModel.player, viewModel.status == .readyToPlay {
                 content(for: player)
             } else {
-                ActivityIndicator()
+                ProgressView()
             }
         }
         .contentShape(Rectangle())

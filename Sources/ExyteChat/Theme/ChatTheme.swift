@@ -10,16 +10,10 @@ import SwiftUI
 public extension EnvironmentValues {
     #if swift(>=6.0)
     @Entry var chatTheme = ChatTheme()
-    @Entry var giphyConfig = GiphyConfiguration()
     #else
     var chatTheme: ChatTheme {
         get { self[ChatThemeKey.self] }
         set { self[ChatThemeKey.self] = newValue }
-    }
-
-    var giphyConfig: GiphyConfiguration {
-        get { self[GiphyConfigurationKey.self] }
-        set { self[GiphyConfigurationKey.self] = newValue }
     }
     #endif
 }
@@ -28,10 +22,6 @@ public extension EnvironmentValues {
 #if swift(<6.0)
 @preconcurrency public struct ChatThemeKey: EnvironmentKey {
     public static let defaultValue = ChatTheme()
-}
-
-public struct GiphyConfigurationKey: EnvironmentKey {
-    public static let defaultValue = GiphyConfiguration()
 }
 #endif
 
@@ -47,10 +37,6 @@ extension View {
     ) -> some View {
         self.environment(\.chatTheme, ChatTheme(colors: colors, images: images))
     }
-
-    public func giphyConfig(_ config: GiphyConfiguration) -> some View {
-        self.environment(\.giphyConfig, config)
-    }
 }
 
 public struct ChatTheme {
@@ -65,7 +51,7 @@ public struct ChatTheme {
     ) {
         self.style = style
         self.images = images
-        
+
         // if background images have been set then override the mainBG color to be clear
         self.colors = if images.background != nil {
             ChatTheme.Colors(copy: colors, mainBG: .clear)
@@ -73,7 +59,7 @@ public struct ChatTheme {
             colors
         }
     }
-    
+
     internal init(accentColor: Color, images: ChatTheme.Images) {
         self.init(
             colors: .init(
@@ -85,7 +71,7 @@ public struct ChatTheme {
             images: images
         )
     }
-    
+
     @available(iOS 18.0, *)
     internal init(accentColor: Color, background: ThemedBackgroundStyle = .mixedWithAccentColor(), improveContrast: Bool) {
         let backgroundColor: Color = background.getBackgroundColor(withAccent: accentColor, improveContrast: improveContrast)
@@ -119,7 +105,7 @@ public struct ChatTheme {
         public var messageFriendBG: Color
         public var messageFriendText: Color
         public var messageFriendTimeText: Color
-        
+
         public var messageSystemBG: Color
         public var messageSystemText: Color
         public var messageSystemTimeText: Color
@@ -199,7 +185,7 @@ public struct ChatTheme {
             self.sendButtonBackground = sendButtonBackground
             self.recordDot = recordDot
         }
-        
+
         public init(copy: Colors, mainBG: Color) {
             self.mainBG = mainBG
             self.mainTint = copy.mainTint
@@ -232,9 +218,9 @@ public struct ChatTheme {
     }
 
     public struct Images {
-      
+
         public struct Background {
-            
+
             let safeAreaRegions: SafeAreaRegions
             let safeAreaEdges: Edge.Set
             let portraitBackgroundLight: Image
@@ -330,9 +316,9 @@ public struct ChatTheme {
             public var cancelReply: Image
             public var replyToMessage: Image
         }
-      
+
         public var background: Background? = nil
-  
+
         public var backButton: Image
         public var scrollToBottom: Image
 
@@ -400,7 +386,7 @@ public struct ChatTheme {
         ) {
             self.backButton = backButton ?? Image("backArrow", bundle: .current)
             self.scrollToBottom = scrollToBottom ?? Image(systemName: "chevron.down")
-            
+
             self.background = background
 
             self.attachMenu = AttachMenu(
@@ -476,10 +462,10 @@ public struct ChatTheme {
             )
         }
     }
-    
+
     public struct Style {
         public var replyOpacity: Double
-        
+
         public init(replyOpacity: Double = 0.8) {
             self.replyOpacity = replyOpacity
         }

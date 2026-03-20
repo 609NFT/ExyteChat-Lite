@@ -64,8 +64,6 @@ struct SwiftUIView_Previews: PreviewProvider {
         return DraftMessage(
             id: nil,
             text: "",
-            medias: [],
-            giphyMedia: nil,
             recording: nil,
             replyMessage: nil,
             createdAt: Date()

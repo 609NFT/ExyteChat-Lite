@@ -199,7 +199,7 @@ struct AsyncImageView: View {
                 Rectangle()
                     .foregroundColor(theme.colors.inputBG)
                     .frame(width: size.width, height: size.height)
-                ActivityIndicator(size: 30, showBackground: false)
+                ProgressView()
             }
         }
     }
