@@ -234,8 +234,8 @@ struct MessageView: View {
                 Color.clear.viewSize(avatarSize)
             }
         }
-        .padding(.leading, MessageView.horizontalScreenEdgePadding)
-        .padding(.trailing, MessageView.horizontalAvatarPadding)
+        .padding(message.user.isCurrentUser ? .trailing : .leading, MessageView.horizontalScreenEdgePadding)
+        .padding(message.user.isCurrentUser ? .leading : .trailing, MessageView.horizontalAvatarPadding)
         .sizeGetter($avatarViewSize)
     }
 
