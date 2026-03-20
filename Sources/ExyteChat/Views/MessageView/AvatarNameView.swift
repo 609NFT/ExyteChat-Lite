@@ -14,7 +14,7 @@ struct AvatarNameView: View {
             }
         Text(letter)
             .viewSize(avatarSize)
-            .clipShape(Circle())
+            .clipShape(RoundedRectangle(cornerRadius: avatarSize * 0.25, style: .continuous))
     }
 }
 

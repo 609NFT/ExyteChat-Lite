@@ -16,10 +16,10 @@ struct AvatarImageView: View {
                 .resizable()
                 .scaledToFill()
         } placeholder: {
-            Rectangle().fill(Color.gray)
+            Rectangle().fill(Color.gray.opacity(0.3))
         }
         .viewSize(avatarSize)
-        .clipShape(Circle())
+        .clipShape(RoundedRectangle(cornerRadius: avatarSize * 0.25, style: .continuous))
     }
 }
 
